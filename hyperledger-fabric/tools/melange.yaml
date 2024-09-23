@@ -1,0 +1,64 @@
+package:
+  name: hyperledger-fabric-tools
+  version: 2.5.0
+  epoch: 0
+  description: A package for Hyperledger Fabric Tools
+  target-architecture: [x86_64, aarch64]
+  copyright:
+    - license: Apache-2.0
+
+environment:
+  environment:
+    GOMODCACHE: '/var/cache/melange'
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - wolfi-base
+      - ca-certificates-bundle
+      - go
+
+vars:
+  bindir: /usr/local/bin
+  fabriccfg: /etc/hyperledger/peercfg
+  repourl: https://github.com/hyperledger/fabric
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: ${{vars.repourl}}
+      tag: v${{package.version}}
+
+  - runs: |
+      echo "$(git rev-parse HEAD)" > ${{targets.destdir}}/commit_sha.txt
+
+  - runs: |
+      mkdir -p ${{targets.destdir}}${{vars.fabriccfg}}
+      cp -r sampleconfig ${{targets.destdir}}${{vars.fabriccfg}}/
+
+  - name: Build Fabric Tools
+    runs: |
+      set -ex
+      export GOBIN=${{targets.destdir}}${{vars.bindir}}
+      COMMIT_SHA=$(cat ${{targets.destdir}}/commit_sha.txt)
+
+      LDFLAGS="
+        -X github.com/hyperledger/fabric/common/metadata.Version=${{package.version}}
+        -X github.com/hyperledger/fabric/common/metadata.CommitSHA=$COMMIT_SHA
+        -X github.com/hyperledger/fabric/common/metadata.BaseDockerLabel=org.hyperledger.fabric
+        -X github.com/hyperledger/fabric/common/metadata.DockerNamespace=hyperledger
+        -X github.com/hyperledger/fabric/common/metadata.BaseDockerNamespace=hyperledger
+      "
+
+      build_tool() {
+        echo "Building $GOBIN/$1"
+        CGO_CFLAGS=" " go install -tags "" -ldflags "$LDFLAGS" -buildvcs=false github.com/hyperledger/fabric/cmd/$1
+      }
+
+      for tool in configtxgen configtxlator cryptogen discover ledgerutil osnadmin; do
+        build_tool "$tool"
+      done
+
+  - uses: strip

@@ -1,0 +1,55 @@
+package:
+  name: hyperledger-fabric-ca
+  version: 1.5.12
+  epoch: 0
+  description: A package for a Hyperledger Fabric Certificate Authority
+  target-architecture:
+    - x86_64
+    - aarch64
+  copyright:
+    - license: Apache-2.0
+
+environment:
+  environment:
+    GOMODCACHE: '/var/cache/melange'
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - wolfi-base
+      - ca-certificates-bundle
+      - go
+
+vars:
+  bindir: /usr/local/bin
+  fabricserverhome: /etc/hyperledger/fabric-ca-server
+
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/hyperledger/fabric-ca
+      tag: v${{package.version}}
+
+  - runs: |
+      COMMIT_SHA=$(git rev-parse HEAD)
+      echo "$COMMIT_SHA" > ${{targets.destdir}}/commit_sha.txt
+
+  - runs: |
+     mkdir -p "${{targets.destdir}}${{vars.fabricserverhome}}"
+
+  - runs: |
+      export GOBIN=${{targets.destdir}}${{vars.bindir}}
+      CGO_CFLAGS=" " go install -ldflags "-X github.com/hyperledger/fabric-ca/lib/metadata.Version=${{package.version}} \
+          -X github.com/hyperledger/fabric/common/metadata.CommitSHA=$(cat ${{targets.destdir}}/commit_sha.txt) \
+          -linkmode external -extldflags '-static -lpthread'" github.com/hyperledger/fabric-ca/cmd/fabric-ca-server
+
+  - runs: |
+      export GOBIN=${{targets.destdir}}${{vars.bindir}}
+      CGO_CFLAGS=" " go install -ldflags "-X github.com/hyperledger/fabric-ca/lib/metadata.Version=${{package.version}} \
+          -X github.com/hyperledger/fabric/common/metadata.CommitSHA=$(cat ${{targets.destdir}}/commit_sha.txt) \
+          -linkmode external -extldflags '-static -lpthread'" github.com/hyperledger/fabric-ca/cmd/fabric-ca-client
+
+  - uses: strip

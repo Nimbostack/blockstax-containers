@@ -1,0 +1,104 @@
+name: 'CI/CD - CI Pipeline'
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  fetch-projects:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-matrix
+        run: |
+          projects=$(ls -d */ | sed 's#/##')
+          matrix="{\"include\":["
+          for project in $projects; do
+            if [ -d "$project" ]; then
+              subprojects=$(ls -d $project/*/ | sed "s#$project/##" | sed 's#/##')
+              for subproject in $subprojects; do
+                matrix="$matrix{\"project\":\"$project\",\"subproject\":\"$subproject\"},"
+              done
+            fi
+          done
+          matrix="${matrix%,}]}"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  build:
+    needs: fetch-projects
+    runs-on: ubuntu-latest
+    environment: melange
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+    strategy:
+      matrix: ${{fromJson(needs.fetch-projects.outputs.matrix)}}
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+          fi
+          git diff --quiet $BASE_SHA ${{ github.sha }} ${{ matrix.project }}/${{ matrix.subproject }} || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Setup signing keys
+        if: steps.check_changes.outputs.changed == 'true'
+        env:
+          MELANGE_RSA_KEY: ${{ secrets.MELANGE_RSA_KEY }}
+          MELANGE_RSA_PUB: ${{ secrets.MELANGE_RSA_PUB }}
+        run: |
+          echo "$MELANGE_RSA_KEY" | base64 -d > ${{ github.workspace }}/melange.rsa
+          echo "$MELANGE_RSA_PUB" | base64 -d > ${{ github.workspace }}/melange.rsa.pub
+
+      - name: Setup melange
+        if: steps.check_changes.outputs.changed == 'true'
+        uses: chainguard-dev/actions/setup-melange@main
+
+      - name: Package with Melange
+        if: steps.check_changes.outputs.changed == 'true'
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: ${{ github.workspace }}/${{ matrix.project }}/${{ matrix.subproject }}/melange.yaml
+          repository-path: ${{ github.workspace }}/${{ matrix.project }}/${{ matrix.subproject }}/packages
+          archs: amd64,aarch64
+          sign-with-key: true
+
+      - name: Publish and Sign
+        uses: wolfi-dev/wolfi-act@main
+        if: steps.check_changes.outputs.changed == 'true'
+        env:
+          OCI_HOST: docker.io
+          OCI_REPO: nimbostack/${{ matrix.project }}-${{ matrix.subproject }}
+          MELANGE_RSA_PUB: '${{ secrets.MELANGE_RSA_PUB }}'
+          COSIGN_KEY: '${{ secrets.COSIGN_KEY }}'
+          COSIGN_KEY_PUB: '${{ secrets.COSIGN_KEY_PUB }}'
+          APKO_ARCHS: x86_64,aarch64
+        with:
+          packages: melange,make,apko,cosign,crane
+          command: |
+            set -ex
+
+            echo "$MELANGE_RSA_KEY" | base64 -d > signing-key.rsa
+            echo "$MELANGE_RSA_PUB" | base64 -d > melange.rsa.pub
+
+            echo "$COSIGN_KEY" | base64 -d > cosign.key
+            echo "$COSIGN_KEY_PUB" | base64 -d > cosign.pub
+
+            apko login $OCI_HOST -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+            cd ${{ matrix.project }}/${{ matrix.subproject }}
+            echo "${{ matrix.project }}-${{ matrix.subproject }} Packaging with Melange"
+
+            make tag

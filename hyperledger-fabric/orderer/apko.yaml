@@ -1,0 +1,38 @@
+include: ../base.yaml
+
+contents:
+  keyring:
+    - ../../melange.rsa.pub
+  repositories:
+    - '@local packages'
+  packages:
+    - hyperledger-fabric-orderer@local
+
+environment:
+  FABRIC_CFG_PATH: /etc/hyperledger/fabric
+  ORDERER_GENERAL_LISTENADDRESS: 0.0.0.0
+  ORDERER_GENERAL_LOCALMSPDIR: /etc/hyperledger/fabric/msp
+  ORDERER_GENERAL_GENESISPROFILE: TwoOrgsOrdererGenesis
+  PATH: /usr/local/bin:/usr/sbin:/sbin:/usr/bin:/bin
+
+annotations:
+  org.opencontainers.image.authors: Nimbostack
+  org.opencontainers.image.title: "hyperledger-fabric-orderer"
+  org.opencontainers.image.ref.name: hyperledger-fabric-orderer
+  org.hyperledger.fabric.version: "2.5.0"
+  org.opencontainers.image.base.name: "wolfi"
+  org.opencontainers.image.description: "Hyperledger Fabric Orderer application packaged by Nimbostack"
+  org.opencontainers.image.licenses: "Apache-2.0"
+  org.opencontainers.image.vendor: "Nimbostack"
+  org.opencontainers.image.version: "2.5.0"
+  org.opencontainers.image.source: "github.com/Nimbostack/blockstax-containers/tree/main/hyperledger-fabric/orderer"
+  org.opencontainers.image.documentation: "github.com/Nimbostack/blockstax-containers/tree/main/hyperledger-fabric/orderer/README.md"
+
+entrypoint:
+  command: orderer start
+
+paths:
+  - path: /var/hyperledger/production/orderer
+    type: directory
+    permissions: 0755
+    uid: 65532

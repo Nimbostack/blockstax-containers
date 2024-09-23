@@ -1,0 +1,13 @@
+*.tar
+*.tar.gz
+packages/**
+*.pub
+*.rsa
+
+
+*.rsa.pub
+*.rsa
+**/packages/*
+*.spdx.json
+.DS_Store
+*.key

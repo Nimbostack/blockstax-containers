@@ -1,0 +1,35 @@
+contents:
+  keyring:
+    - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  repositories:
+    - https://packages.wolfi.dev/os
+  packages:
+    - wolfi-base
+    - ca-certificates-bundle
+
+archs:
+  - x86_64
+  - aarch64
+
+paths:
+  - path: /etc/hyperledger
+    type: directory
+    permissions: 0755
+    uid: 65532
+  - path: /var/hyperledger
+    type: directory
+    permissions: 0755
+    uid: 65532
+  - path: /var/hyperledger/production
+    type: directory
+    permissions: 0755
+    uid: 65532
+
+accounts:
+  groups:
+    - groupname: hyperledger
+      gid: 65532
+  users:
+    - username: hyperledger
+      uid: 65532
+  run-as: hyperledger

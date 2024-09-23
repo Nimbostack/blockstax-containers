@@ -1,0 +1,20 @@
+name: 'Close stale issues'
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Runs at 01:00 UTC every day
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v8
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.'
+          close-issue-message: 'This issue has been automatically closed due to inactivity. Please feel free to reopen it if you believe it still requires attention.'
+          days-before-stale: 30
+          days-before-close: 7
+          stale-issue-label: 'stale'
+          exempt-issue-labels: 'pinned,security'
+          exempt-all-milestones: true
+          operations-per-run: 100

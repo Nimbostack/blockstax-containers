@@ -1,0 +1,57 @@
+package:
+  name: hyperledger-fabric-orderer
+  version: 2.5.0
+  epoch: 0
+  description: A package for a Hyperledger Fabric Orderer
+  target-architecture:
+    - x86_64
+    - aarch64
+  copyright:
+    - license: Apache-2.0
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - wolfi-base
+      - ca-certificates-bundle
+      - go
+
+vars:
+  bindir: /usr/local/bin
+  fabriccfg: /etc/hyperledger/fabric
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/hyperledger/fabric
+      tag: v${{package.version}}
+
+  - runs: |
+      COMMIT_SHA=$(git rev-parse HEAD)
+      echo "$COMMIT_SHA" > ${{targets.destdir}}/commit_sha.txt
+
+  - runs: |
+      mkdir -p "${{targets.destdir}}${{vars.fabriccfg}}/msp" \
+               ${{targets.destdir}}${{vars.bindir}} \
+               ${{targets.destdir}}/var/hyperledger/production \
+               ${{targets.destdir}}${{vars.fabriccfg}}/crypto-config
+
+  - runs: |
+      export GOBIN=${{targets.destdir}}${{vars.bindir}}
+      CGO_CFLAGS=" " go install -tags "" -ldflags "-X github.com/hyperledger/fabric/common/metadata.Version=${{package.version}} \
+       -X github.com/hyperledger/fabric/common/metadata.CommitSHA=$(cat ${{targets.destdir}}/commit_sha.txt) \
+       -X github.com/hyperledger/fabric/common/metadata.BaseDockerLabel=org.hyperledger.fabric \
+       -X github.com/hyperledger/fabric/common/metadata.DockerNamespace=hyperledger \
+       -X github.com/hyperledger/fabric/common/metadata.BaseDockerNamespace=hyperledger" \
+       -buildvcs=false github.com/hyperledger/fabric/cmd/orderer
+
+  - runs: |
+      cp -r sampleconfig/msp "${{targets.destdir}}${{vars.fabriccfg}}/"
+      cp sampleconfig/orderer.yaml "${{targets.destdir}}${{vars.fabriccfg}}/orderer.yaml"
+      cp sampleconfig/configtx.yaml "${{targets.destdir}}${{vars.fabriccfg}}/configtx.yaml"
+
+  - uses: strip

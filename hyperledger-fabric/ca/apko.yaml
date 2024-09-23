@@ -1,0 +1,38 @@
+include: ../base.yaml
+
+contents:
+  keyring:
+    - ../../melange.rsa.pub
+  repositories:
+    - '@local packages'
+  packages:
+    - hyperledger-fabric-ca@local
+
+environment:
+  FABRIC_CA_HOME: /etc/hyperledger/fabric-ca-server
+  PATH: /usr/local/bin:/usr/sbin:/sbin:/usr/bin:/bin
+  FABRIC_CFG_PATH: /etc/hyperledger/fabric
+  FABRIC_CA_SERVER_HOME: /etc/hyperledger/fabric-ca-server
+  FABRIC_CA_CLIENT_HOME: /etc/hyperledger/fabric-ca-client
+  APP_VERSION: 1.5.12
+
+annotations:
+  org.opencontainers.image.authors: Nimbostack
+  org.opencontainers.image.title: "hyperledger-fabric-ca"
+  org.hyperledger.fabric.version: "1.5.12"
+  org.opencontainers.image.base.name: "wolfi"
+  org.opencontainers.image.description: "Hyperledger Fabric Certificate Authority application packaged by Nimbostack"
+  org.opencontainers.image.licenses: "Apache-2.0"
+  org.opencontainers.image.vendor: "Nimbostack"
+  org.opencontainers.image.version: "1.5.12"
+  org.opencontainers.image.source: "github.com/Nimbostack/blockstax-containers/tree/main/hyperledger-fabric/ca"
+  org.opencontainers.image.documentation: "github.com/Nimbostack/blockstax-containers/tree/main/hyperledger-fabric/ca/README.md"
+
+paths:
+  - path: /etc/hyperledger/fabric-ca-server
+    type: directory
+    permissions: 0755
+    uid: 65532
+
+entrypoint:
+  command: fabric-ca-server start -b 'admin:adminpw'
