@@ -28,6 +28,7 @@ docker pull nimbostack/hyperledger-fabric-tools:2.5.0
 NimboStack Hyperledger Fabric Tools images are available starting from version 2.5.0. Supported tags include:
 
 - `2.5.0`
+- `2.5.10`
 
 ## Issues
 
