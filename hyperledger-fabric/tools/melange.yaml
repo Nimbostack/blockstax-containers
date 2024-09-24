@@ -1,6 +1,6 @@
 package:
   name: hyperledger-fabric-tools
-  version: 2.5.0
+  version: 2.5.10
   epoch: 0
   description: A package for Hyperledger Fabric Tools
   target-architecture: [x86_64, aarch64]
