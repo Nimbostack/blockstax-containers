@@ -30,6 +30,7 @@ docker pull nimbostack/hyperledger-fabric-orderer:2.5.0
 NimboStack Hyperledger Fabric Orderer images are available starting from version 2.5.0. Supported tags include:
 
 - `2.5.0`
+- `2.5.10`
 
 ## Issues
 
