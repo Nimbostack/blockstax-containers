@@ -30,6 +30,7 @@ docker pull nimbostack/hyperledger-fabric-peer:2.5.0
 NimboStack Hyperledger Fabric Peer images are available starting from version 2.5.0. Supported tags include:
 
 - `2.5.0`
+- `2.5.10`
 
 ## Issues
 
