@@ -1,6 +1,6 @@
 package:
   name: hyperledger-fabric-orderer
-  version: 2.5.0
+  version: 2.5.10
   epoch: 0
   description: A package for a Hyperledger Fabric Orderer
   target-architecture:
