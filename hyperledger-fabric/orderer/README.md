@@ -15,7 +15,7 @@ NimboStack provides custom-built Hyperledger Fabric images using Melange and Apk
 To use a NimboStack Hyperledger Fabric Orderer image in your project, specify the desired version in your Docker commands or Kubernetes manifests:
 
 ```bash
-docker pull nimbostack/hyperledger-fabric-orderer:2.5.0
+docker pull nimbostack/hyperledger-fabric-orderer:<TAG>
 ```
 
 ## Why use Nimbostack Images?

@@ -13,7 +13,7 @@ The Hyperledger Fabric CLI tools allow you to interact with deployed chaincode, 
 To use a NimboStack Hyperledger Fabric Tools image in your project, specify the desired version in your Docker commands or Kubernetes manifests:
 
 ```bash
-docker pull nimbostack/hyperledger-fabric-tools:2.5.0
+docker pull nimbostack/hyperledger-fabric-tools:<TAG>
 ```
 
 ## Why use Nimbostack Images?
@@ -29,6 +29,7 @@ NimboStack Hyperledger Fabric Tools images are available starting from version 2
 
 - `2.5.0`
 - `2.5.10`
+- `3.0.0`
 
 ## Issues
 
