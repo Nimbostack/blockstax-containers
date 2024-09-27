@@ -4,36 +4,36 @@
 
 Blockstax-Containers is an open-source project by Nimbostack that provides Melange and Apko declarations for building container images for Permissioned Blockchain Network projects. While our long-term goal is to support multiple Blockchain projects, we currently focus on Hyperledger Fabric components. This project aims to simplify and standardize the process of creating container images for all the required images to create your network.
 
-## Why This Approach?
+## 🌟 Features
 
-1. **Reproducibility**: By using Melange and Apko, we ensure that the build process for Blockchain components is reproducible and consistent across different environments.
+- **Reproducible Builds**: Consistent environments across deployments
+- **Enhanced Security**: Built-in best practices from the ground up
+- **Customizable**: Easily modify build declarations for your needs
+- **Community-Driven**: Open-source collaboration for continuous improvement
+- **No Dockerfiles**:
 
-2. **Security**: This approach allows for better control over the container build process, enabling us to implement security best practices from the ground up.
-
-3. **Customization**: Developers can easily modify the build declarations to suit their specific needs while maintaining compatibility with the official Blockchain repositories.
-
-4. **Community Collaboration**: By open-sourcing this project, we invite the broader Permissioned Blockchain networks community to contribute, improve, and extend the capabilities of these container builds.
-
-## Repository Structure
+## 📁 Repository Structure
 
 ```
+blockstax-containers/
 ├── fabric/
 │   ├── peer/
 │   ├── orderer/
 │   ├── tools/
 │   └── ca/
+└── README.md
 ```
 
 Currently, the repository contains subdirectories, each with Melange and Apko declarations for building the respective Blockchain network components. As we expand to support other Blockchain projects, new directories will be added.
 
-## How to Use
+## 🔧 How to Use
 
-### Prerequisites:
+## 🛠️ Prerequisites
 
-- [apko](https://edu.chainguard.dev/open-source/build-tools/apko/getting-started-with-apko/).
-- [melange](https://edu.chainguard.dev/open-source/build-tools/melange/getting-started-with-melange/).
-- [cosign](https://docs.sigstore.dev/signing/quickstart/#installation).
-- [crane](https://github.com/google/go-containerregistry/tree/main/cmd/crane).
+- [apko](https://edu.chainguard.dev/open-source/build-tools/apko/getting-started-with-apko/)
+- [melange](https://edu.chainguard.dev/open-source/build-tools/melange/getting-started-with-melange/)
+- [cosign](https://docs.sigstore.dev/signing/quickstart/#installation)
+- [crane](https://github.com/google/go-containerregistry/tree/main/cmd/crane)
 
 ### Quickstart
 
@@ -77,18 +77,20 @@ If you intend to sign your published images, you can use the following command t
  cosign generate-key-pair
 ```
 
-## Future Benefits for the Permissioned Blockchain Community
+## 🔮 Future Plans
 
-1. **Standardization**: This project aims to provide a standard approach to building containers for Open Source Blockchain projects, starting with Fabric. This will make it easier for organizations to adopt and maintain Private/Permissioned networks.
+- Expand support to other Blockchain projects
+- Provide unified tooling across various Blockchain platforms
+- Foster cross-project innovation within the ecosystem
 
-2. **Improved Security**: By focusing on the container build process, we can help improve the overall security posture of Cloud-Native Blockchain Network deployments.
+## 📄 License
 
-3. **Faster Updates**: With a streamlined build process, the community can more quickly incorporate updates and security patches from official Blockchain Project repositories.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-4. **Cross-Project Innovation**: As we expand to support multiple Blockchain projects, this initiative will foster innovation and knowledge sharing across different blockchain platforms within the ecosystem.
+## 🙏 Acknowledgements
 
-5. **Unified Tooling**: In the long term, we aim to provide a unified set of tools for building and managing containers across various Blockchain projects, simplifying the deployment and management of complex blockchain networks.
+- [Hyperledger Fabric](https://www.hyperledger.org/use/fabric)
+- [Melange](https://github.com/chainguard-dev/melange)
+- [Apko](https://github.com/chainguard-dev/apko)
 
-## Current Scope and Future Plans
-
-While our current focus is on Hyperledger Fabric, we have plans to expand our support to other Blockchain projects in the future. This expansion will be driven by community needs and contributions. We encourage users and contributors to suggest and help implement support for additional Open Source Blockchain projects.
+⭐️ If you find this project useful, please consider giving it a star on GitHub! ⭐️
