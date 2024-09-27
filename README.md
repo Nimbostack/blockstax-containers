@@ -10,7 +10,7 @@ Blockstax-Containers is an open-source project by Nimbostack that provides Melan
 - **Enhanced Security**: Built-in best practices from the ground up
 - **Customizable**: Easily modify build declarations for your needs
 - **Community-Driven**: Open-source collaboration for continuous improvement
-- **No Dockerfiles**:
+- **No Dockerfiles**: Eliminates the need for maintaining complex Dockerfiles
 
 ## 📁 Repository Structure
 
