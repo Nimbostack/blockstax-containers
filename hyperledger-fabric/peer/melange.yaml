@@ -1,6 +1,6 @@
 package:
   name: hyperledger-fabric-peer
-  version: 2.5.10
+  version: 3.0.0
   epoch: 0
   description: A package for a Hyperledger Fabric Peer
   target-architecture: [x86_64, aarch64]
