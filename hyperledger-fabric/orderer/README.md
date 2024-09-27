@@ -31,6 +31,7 @@ NimboStack Hyperledger Fabric Orderer images are available starting from version
 
 - `2.5.0`
 - `2.5.10`
+- `3.0.0`
 
 ## Issues
 
