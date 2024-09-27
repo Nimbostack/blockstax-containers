@@ -93,4 +93,4 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - [Melange](https://github.com/chainguard-dev/melange)
 - [Apko](https://github.com/chainguard-dev/apko)
 
-⭐️ If you find this project useful, please consider giving it a star on GitHub! ⭐️
+⭐️ If you find this project useful, please consider giving it a star! ⭐️
