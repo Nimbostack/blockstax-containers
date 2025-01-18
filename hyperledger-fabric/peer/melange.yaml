@@ -20,7 +20,7 @@ environment:
       - libcrypto3
       - libssl3
       - ca-certificates-bundle
-      - go=~1.20
+      - go
 
 vars:
   bindir: /build/bin/peer
