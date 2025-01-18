@@ -17,8 +17,8 @@ environment:
       - https://packages.wolfi.dev/os
     packages:
       - wolfi-base
-      - libcrypto3=3.3.2-r2
-      - libssl3=3.3.2-r2
+      - libcrypto3=3.3.2-r4
+      - libssl3=3.3.2-r4
       - ca-certificates-bundle
       - go=~1.20
 
