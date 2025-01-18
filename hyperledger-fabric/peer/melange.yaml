@@ -1,6 +1,6 @@
 package:
   name: hyperledger-fabric-peer
-  version: 3.0.0
+  version: 2.5.10
   epoch: 0
   description: A package for a Hyperledger Fabric Peer
   target-architecture: [x86_64, aarch64]
@@ -17,8 +17,10 @@ environment:
       - https://packages.wolfi.dev/os
     packages:
       - wolfi-base
+      - libcrypto3=3.3.2-r2
+      - libssl3=3.3.2-r2
       - ca-certificates-bundle
-      - go
+      - go=~1.20
 
 vars:
   bindir: /build/bin/peer
@@ -42,6 +44,10 @@ pipeline:
                ${{targets.destdir}}/release/${{build.arch}}/builders/ccaas/bin/ \
                ${{targets.destdir}}/opt/hyperledger/ccaas_builder/bin \
                ${{targets.destdir}}/usr/local/bin
+
+  - uses: go/bump
+    with:
+      deps: golang.org/x/crypto@v0.32.0 github.com/docker/docker@v27.5.0+incompatible golang.org/x/net@v0.34.0
 
   - runs: |
       cd ccaas_builder
